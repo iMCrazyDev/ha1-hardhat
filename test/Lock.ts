@@ -39,4 +39,21 @@ describe("MyToken", function () {
 
       assert.equal(finalBalance, ethers.parseEther("100.0001"), "Token balance did not match");
   });
+
+  it("sending tokens", async function () {
+    const initialBalance = await myToken.balanceOf(acc0.address);
+    const amountToSend = ethers.parseEther("0.0001");
+
+    await myToken.connect(acc0).transfer(acc1.address, amountToSend);
+    await myToken.connect(acc0).transfer(acc2.address, amountToSend);
+
+    const finalBalance = await myToken.balanceOf(acc1.address);
+    const finalBalance2 = await myToken.balanceOf(acc2.address);
+    const endlBalance = await myToken.balanceOf(acc0.address);
+
+    assert.equal(finalBalance, amountToSend, "error per sending");
+    assert.equal(finalBalance2, amountToSend, "error per sending");
+    assert.equal(endlBalance, initialBalance - amountToSend - amountToSend, "error per sending");
+  });
+
 });
